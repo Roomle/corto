@@ -39,6 +39,14 @@ SET(EXE_HEADERS
 ADD_LIBRARY(cortolib STATIC ${LIB_SOURCES} ${LIB_HEADERS})
 ADD_EXECUTABLE(cortoexe ${EXE_SOURCE} ${EXE_HEADERS})
 
+if(IOS)
+	set_target_properties(cortolib PROPERTIES
+	FRAMEWORK TRUE
+	FRAMEWORK_VERSION C
+	MACOSX_FRAMEWORK_IDENTIFIER com.roomle.corto
+	)
+endif()
+
 SET(CORTO_DEFINITIONS "") 
 
 if(MSVC)
@@ -74,11 +82,13 @@ set_target_properties     (cortolib PROPERTIES DEBUG_POSTFIX "d")
 set_target_properties     (cortoexe PROPERTIES OUTPUT_NAME "corto")
 set_target_properties     (cortolib PROPERTIES OUTPUT_NAME "corto")
 
-INSTALL(TARGETS cortolib cortoexe
-	RUNTIME DESTINATION bin
-    BUNDLE DESTINATION bin
-	LIBRARY DESTINATION lib
-	ARCHIVE DESTINATION lib)
+if(NOT IOS)
+	INSTALL(TARGETS cortolib cortoexe
+		RUNTIME DESTINATION bin
+		BUNDLE DESTINATION bin
+		LIBRARY DESTINATION lib
+		ARCHIVE DESTINATION lib)
+endif()
 
 INSTALL(FILES
 	${CORTO_SOURCE_PATH}/bitstream.h
